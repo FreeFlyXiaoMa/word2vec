@@ -91,17 +91,12 @@ def build_dataset(words):
     reverse_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
     # 确保字典的大小与词汇量大小相同
     assert len(dictionary) == vocabulary_size
-
     return data, count, dictionary, reverse_dictionary
 
 data, count, dictionary, reverse_dictionary = build_dataset(words)
 print('常见的词 (+UNK)', count[:5])
 print('样本数据', data[:10])
 del words  # 减少内存
-
-## 为Skip-Gram生成批量数据 生成批处理或目标词(`批处理`) 和一批相应的上下文词(`标签`)． 它一次读取总窗口大小为
-# `2 * window_size + 1` 的单词(称为 `span`) ， 并在单个范围内创建 `2 * window_size` 数据点。
-# 该函数以这种方式继续，直到创建 `batch_size` 数据点.每当我们到达单词序列的末尾时，我们就从头开始.
 
 data_index = 0
 def generate_batch_skip_gram(batch_size, window_size):
@@ -225,14 +220,8 @@ loss = tf.reduce_mean(
 ### 计算单词相似度
 # 我们根据余弦距离计算两个给定单词之间的相似度.为了有效地执行此操作，我们使用矩阵运算来执行此操作，如下所示.
 
-### 模型参数优化器
+#定义一个恒定的学习率和一个使用Adagrad方法的优化器
 
-# 然后我们定义一个恒定的学习率和一个使用Adagrad方法的优化器.也可以随意尝试列出的其他优化器[这里]
-# (https: // www.tensorflow.org / api_guides / python / train).
-
-# %%
-
-# 优化器.
 optimizer = tf.train.AdagradOptimizer(1.0).minimize(loss)
 norm=tf.sqrt(tf.reduce_sum(tf.square(embeddings),1,keep_dims=True))
 normalized_embeddings=embeddings/norm
@@ -242,7 +231,6 @@ similarity=tf.matmul(valid_embeddings,normalized_embeddings,transpose_b=True)
 
 ## 运行Skip-Gram算法
 
-# %%
 
 num_steps = 100001
 skip_losses = []
