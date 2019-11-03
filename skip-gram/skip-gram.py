@@ -6,7 +6,6 @@
 #  Skip-gram 和 CBOW模型
 # ** 注意 **: 此代码可能会占用大量内存。 如果你有大量的RAM内存（ > 4 GB），你不必担心。 否则请减少 `batch_size`
 # 或 `embedding_size` 参数以允许模型获得适合内存。
-
 # 这些都是我们稍后将要使用的模块.在继续操作之前,请确保可以导入它们
 
 import collections
@@ -55,9 +54,8 @@ print('示例单词（结束）: ', words[-10:])
 # *`dictionary`: 将字符串单词映射到ID(例如 {I: 0, like: 1, to: 2, go: 3, school: 4}) *`reverse_dictionary`: 将ID映射到字符串单词(例如
 # {0: I, 1: like, 2: to, 3: go, 4: school} * `count`: （单词，频率）元素列表(例如[(I, 1), (like, 1), (to, 2), (go, 1), (school, 1)]
 # * `data`: 包含我们读取的文本字符串，其中字符串单词被替换为单词ID(例如[0, 1, 2, 3, 2, 4])
-#
-# 它还引入了一个额外的特殊标记 `UNK`，表示稀有单词太少，无法使用.
 
+# 它还引入了一个额外的特殊标记 `UNK`，表示稀有单词太少，无法使用.
 # 我们将词汇量大小限制为50000
 vocabulary_size = 50000
 
@@ -231,7 +229,6 @@ similarity=tf.matmul(valid_embeddings,normalized_embeddings,transpose_b=True)
 
 ## 运行Skip-Gram算法
 
-
 num_steps = 100001
 skip_losses = []
 # ConfigProto是一种提供执行图所需的各种配置设置的方法
@@ -288,14 +285,8 @@ with open('skip_losses.csv', 'wt') as f:
     writer = csv.writer(f, delimiter=',')
     writer.writerow(skip_losses)
 
-
-# %% md
-
 ## 可视化Skip-Gram算法的学习
-
 ### 找到只聚集在一起的单词而不是稀疏分布的单词
-
-# %%
 
 def find_clustered_embeddings(embeddings, distance_threshold, sample_threshold):
     '''
@@ -328,9 +319,6 @@ def find_clustered_embeddings(embeddings, distance_threshold, sample_threshold):
 
     return np.where(max_cosine_sim > distance_threshold)[0]
 
-
-# %% md
-
 ### 使用Scikit-Learn计算单词嵌入的t-SNE可视化
 
 # 我们将使用大样本空间来构建T-SNE流形(T-SNE manifold)，然后使用余弦相似性对其进行修剪
@@ -351,12 +339,7 @@ two_d_embeddings = two_d_embeddings[selected_ids, :]
 
 print('在', num_points, '个样本 ', '之中,', '通过裁剪选择出', selected_ids.shape[0], '个样本')
 
-
-# %% md
-
 ### 用Matplotlib绘制t-SNE结果
-
-# %%
 
 def plot(embeddings, labels):
     n_clusters = 20  # 聚类（簇）数量
@@ -383,7 +366,5 @@ def plot(embeddings, labels):
     # pylab.savefig('word_embeddings.png')
     pylab.show()
 
-
 words = [reverse_dictionary[i] for i in selected_ids]
 plot(two_d_embeddings, words)
-
